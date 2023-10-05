@@ -12,7 +12,8 @@ public class ConsoleProgress implements Runnable {
                 index = (index + 1) % process.length;
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Thread.currentThread().interrupt();
+            System.out.print("\r loaded");
         }
     }
 
