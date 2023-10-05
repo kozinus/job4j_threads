@@ -7,10 +7,10 @@ public class Wget {
                     try {
                         for (int i = 0; i < 101; i++) {
                             Thread.sleep(1000);
-                            System.out.println("\rLoading: " + i + "%");
+                            System.out.print("\r Loading: " + i + "%");
                         }
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        Thread.currentThread().interrupt();
                     }
                 }
                 );
