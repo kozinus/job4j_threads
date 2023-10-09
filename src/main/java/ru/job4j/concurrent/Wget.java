@@ -25,29 +25,28 @@ public class Wget implements Runnable {
         try (var in = new URL(url).openStream();
              var out = new FileOutputStream(file)) {
             System.out.println("Open connection: " + (System.currentTimeMillis() - startAt) + " ms");
-            var dataBuffer = new byte[128];
+            var dataBuffer = new byte[256];
             int bytesRead;
             int totalBytesRead = 0;
-            int downloadOffset = 1000000;
             var downloadAt = System.nanoTime();
             while ((bytesRead = in.read(dataBuffer, 0, dataBuffer.length)) != -1) {
                 out.write(dataBuffer, 0, bytesRead);
                 totalBytesRead += bytesRead;
-                long downloadTime = System.nanoTime() - downloadAt;
-                System.out.println("Read 128 bytes : " + downloadTime + " nano.");
-                downloadOffset -= downloadTime;
-                if (totalBytesRead > speed && downloadOffset > 0) {
+                if (totalBytesRead > speed && System.nanoTime() - downloadAt < 1000000) {
+                    int downloadTime = (int) (System.nanoTime() - downloadAt);
+                    System.out.printf("Read %d bytes : %d nano.\nPause: %d nano.%n",
+                            totalBytesRead, downloadTime, 1000000 - downloadTime);
                     try {
-                        System.out.println("Pause: " + downloadOffset + " nano.");
-                        Thread.sleep(0, downloadOffset);
+                        Thread.sleep(0, 1000000 - downloadTime);
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                     }
                     totalBytesRead = 0;
-                    downloadOffset = 1000000;
+                    downloadAt = System.nanoTime();
                 }
-                downloadAt = System.nanoTime();
             }
+            System.out.printf("Read %d bytes : %d nano.%n",
+                    totalBytesRead, System.nanoTime() - downloadAt);
         } catch (IOException e) {
             e.printStackTrace();
         }
