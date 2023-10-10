@@ -12,32 +12,27 @@ public class ParseFile {
 
     public String getContent(Predicate<Integer> filter) {
         synchronized (file) {
-            String output = "";
+            StringBuilder output = new StringBuilder();
             try (InputStream i = new FileInputStream(file);
                  BufferedInputStream in = new BufferedInputStream(i)) {
                 int data;
-                while ((data = i.read()) > 0) {
+                while ((data = in.read()) != -1) {
                     if (filter.test(data)) {
-                        output += (char) data;
+                        output.append((char) data);
                     }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return output;
+            return output.toString();
         }
     }
 
-    public void saveContent(String content) {
-        synchronized (file) {
-            try (OutputStream o = new FileOutputStream(file);
-                 BufferedOutputStream out = new BufferedOutputStream(o)) {
-                for (int i = 0; i < content.length(); i += 1) {
-                    out.write(content.charAt(i));
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    public String getContentLowerThanInput(int input) {
+        return getContent(x -> x < input);
+    }
+
+    public String getContentHigherThanInput(int input) {
+        return getContent(x -> x > input);
     }
 }
