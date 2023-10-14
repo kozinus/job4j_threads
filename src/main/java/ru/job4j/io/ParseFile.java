@@ -28,11 +28,11 @@ public class ParseFile {
         }
     }
 
-    public String getContentLowerThanInput(int input) {
-        return getContent(x -> x < input);
+    public String getContentIfTrue() {
+        return getContent(x -> true);
     }
 
-    public String getContentHigherThanInput(int input) {
-        return getContent(x -> x > input);
+    public String getContentLowerThan0x80() {
+        return getContent(x -> x < 0x80);
     }
 }
