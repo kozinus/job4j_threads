@@ -39,7 +39,6 @@ class SimpleBlockingQueueTest {
         for (int i = 0; i < 3; i++) {
             set.add(queue.poll());
         }
-        System.out.println(set);
-        assertThat(set).hasSize(2).containsAll(Set.of(18, 19));
+        assertThat(set).hasSize(3).containsAll(Set.of(17, 18, 19));
     }
 }
