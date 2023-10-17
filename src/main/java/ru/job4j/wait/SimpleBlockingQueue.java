@@ -11,7 +11,7 @@ public class SimpleBlockingQueue<T> {
     @GuardedBy("this")
     private final Object monitor = this;
 
-    private Queue<T> queue = new LinkedList<>();
+    private final Queue<T> queue = new LinkedList<>();
 
     private final int size;
 
@@ -27,8 +27,12 @@ public class SimpleBlockingQueue<T> {
         monitor.notifyAll();
     }
 
+    public synchronized boolean isEmpty() {
+        return this.queue.peek() == null;
+    }
+
     public synchronized T poll() throws InterruptedException {
-        while (this.queue.peek() == null) {
+        while (this.isEmpty()) {
             monitor.wait();
         }
         T value = this.queue.poll();
