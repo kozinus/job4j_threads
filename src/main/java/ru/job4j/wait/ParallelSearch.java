@@ -25,7 +25,12 @@ public class ParallelSearch {
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                     }
-                    consumer.interrupt();
                 }, "2").start();
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        consumer.interrupt();
     }
 }
