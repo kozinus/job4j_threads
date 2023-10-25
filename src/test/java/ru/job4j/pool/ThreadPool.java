@@ -17,7 +17,7 @@ public class ThreadPool {
             this.threads.add(new Thread(() -> {
                 while (!Thread.currentThread().isInterrupted()) {
                     try {
-                        this.tasks.poll();
+                        this.tasks.poll().run();
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                     }
