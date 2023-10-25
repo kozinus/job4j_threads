@@ -20,6 +20,7 @@ public class Cache {
             out.setName(model.getName());
             return out;
         };
+        memory.computeIfPresent(model.getId(), function);
         return true;
     }
 
