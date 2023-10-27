@@ -20,8 +20,7 @@ public class Cache {
             out.setName(model.getName());
             return out;
         };
-        memory.computeIfPresent(model.getId(), function);
-        return true;
+        return memory.computeIfPresent(model.getId(), function) != null;
     }
 
     public void delete(Base model) {
