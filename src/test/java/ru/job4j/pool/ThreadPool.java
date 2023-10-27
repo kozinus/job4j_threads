@@ -6,14 +6,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ThreadPool {
-    private final List<Thread> threads;
-    private final SimpleBlockingQueue<Runnable> tasks;
+    private final static int SIZE = Runtime.getRuntime().availableProcessors();
+    private final List<Thread> threads = new LinkedList<>();
+    private final SimpleBlockingQueue<Runnable> tasks = new SimpleBlockingQueue<>(SIZE);
 
     public ThreadPool() {
-        int size = Runtime.getRuntime().availableProcessors();
-        this.tasks = new SimpleBlockingQueue<>(size);
-        this.threads = new LinkedList<>();
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < SIZE; i++) {
             this.threads.add(new Thread(() -> {
                 while (!Thread.currentThread().isInterrupted()) {
                     try {
@@ -27,12 +25,8 @@ public class ThreadPool {
         }
     }
 
-    public void work(Runnable job) {
-        try {
-            this.tasks.offer(job);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public void work(Runnable job) throws InterruptedException {
+        this.tasks.offer(job);
     }
 
     public void shutdown() {
