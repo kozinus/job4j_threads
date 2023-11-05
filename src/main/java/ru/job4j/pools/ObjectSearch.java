@@ -30,36 +30,26 @@ public class ObjectSearch<T> extends RecursiveTask<Integer> {
     @Override
     protected Integer compute() {
         int out = -1;
-        if (to == from) {
-            if (objects[to] != null && objects[to].equals(obj)) {
-                out = to;
-            }
-        } else {
-            int mid = (from + to) / 2;
-            ObjectSearch leftSearch = new ObjectSearch(objects, from, mid, obj);
-            ObjectSearch rightSearch = new ObjectSearch(objects, mid + 1, to, obj);
-            leftSearch.fork();
-            rightSearch.fork();
-            int left = (int) leftSearch.join();
-            int right = (int) rightSearch.join();
-            if (left != -1) {
-                out = left;
-            } else if (right != -1) {
-                out = right;
-            }
+        if (to - from < 10) {
+            return linearSearch();
+        }
+        int mid = (from + to) / 2;
+        ObjectSearch leftSearch = new ObjectSearch(objects, from, mid, obj);
+        ObjectSearch rightSearch = new ObjectSearch(objects, mid + 1, to, obj);
+        leftSearch.fork();
+        rightSearch.fork();
+        int left = (int) leftSearch.join();
+        int right = (int) rightSearch.join();
+        if (left != -1) {
+            out = left;
+        } else if (right != -1) {
+            out = right;
         }
         return out;
     }
 
     public static int find(Object[] objects, Object obj) {
-        int out;
         ForkJoinPool forkJoinPool = new ForkJoinPool();
-        ObjectSearch search = new ObjectSearch(objects, 0, objects.length - 1, obj);
-        if (objects.length < 10) {
-            out = search.linearSearch();
-        } else {
-            out = (int) forkJoinPool.invoke(new ObjectSearch(objects, 0, objects.length - 1, obj));
-        }
-        return out;
+        return (int) forkJoinPool.invoke(new ObjectSearch(objects, 0, objects.length - 1, obj));
     }
 }
