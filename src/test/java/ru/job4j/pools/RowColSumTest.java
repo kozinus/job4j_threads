@@ -21,13 +21,13 @@ class RowColSumTest {
 
     @Test
     public void findSumsLinear() {
-        RowColSum.Sums[] sums = RowColSum.sum(matrix);
+        Sums[] sums = RowColSum.sum(matrix);
         assertThat(sums[0].getRowSum()).isEqualTo(15);
     }
 
     @Test
     public void findSumsAsync() {
-        RowColSum.Sums[] sums;
+        Sums[] sums;
         try {
             sums = RowColSum.asyncSum(matrix);
         } catch (InterruptedException | ExecutionException e) {
