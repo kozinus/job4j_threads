@@ -40,11 +40,7 @@ public class ObjectSearch<T> extends RecursiveTask<Integer> {
         rightSearch.fork();
         int left = (int) leftSearch.join();
         int right = (int) rightSearch.join();
-        if (left != -1) {
-            out = left;
-        } else if (right != -1) {
-            out = right;
-        }
+        out = Math.max(left, right);
         return out;
     }
 
